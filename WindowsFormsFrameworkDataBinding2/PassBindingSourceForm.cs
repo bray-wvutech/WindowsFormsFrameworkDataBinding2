@@ -23,12 +23,18 @@ namespace WindowsFormsFrameworkDataBinding2
         private void PassBindingSourceForm_Load(object sender, EventArgs e)
         {
             textBox1.DataBindings.Add("Text", _bindingSource, "Name");
+            // we could also do this in the form1 code instead
             _bindingSource.AddNew();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // this is ok button
+            // we could also do this in form1 code instead
             _bindingSource.EndEdit();
+
+            // use this for cancel button
+            //_bindingSource.CancelEdit();
         }
     }
 }
