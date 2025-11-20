@@ -33,21 +33,62 @@ namespace WindowsFormsFrameworkDataBinding2
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // one way
+            //BadWayForm badWayForm = new BadWayForm();
+            //badWayForm.ShowDialog();
+
+
+            // way number two
             // manually passing values and adding them
-            //var newRow = this.database1DataSet.Person.NewPersonRow();
+            ManualAddForm addForm = new ManualAddForm();
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                var newRow = this.database1DataSet.Person.NewPersonRow();
+                newRow.Name = addForm.PersonName;
+                newRow.Age = addForm.Age;
+                this.database1DataSet.Person.AddPersonRow(newRow);
+                this.Validate();
+                personBindingSource.EndEdit();
+                this.tableAdapterManager1.UpdateAll(this.database1DataSet);
+            }
 
-            //ManualAddForm addForm = new ManualAddForm();            
-            //addForm.ShowDialog();
-            
-            //newRow.Name = addForm.PersonName;
-            //newRow.Age = "89";
-            //this.database1DataSet.Person.AddPersonRow(newRow);
-            //this.Validate();
-            //personBindingSource.EndEdit();
-            //this.tableAdapterManager1.UpdateAll(this.database1DataSet);
+            // way number three
+            //PassBindingSourceForm addForm = new PassBindingSourceForm(this.personBindingSource);
+            //this.personBindingSource.AddNew();
+            //if (addForm.ShowDialog() == DialogResult.OK)
+            //{
+            //    this.Validate();
+            //    this.personBindingSource.EndEdit();
+            //    this.tableAdapterManager1.UpdateAll(this.database1DataSet);
+            //}
+            //else
+            //{
+            //    this.personBindingSource.CancelEdit();
+            //}
+        }
 
-            PassBindingSourceForm addForm = new PassBindingSourceForm(this.personBindingSource);
-            addForm.ShowDialog();
+        private void button3_Click(object sender, EventArgs e)
+        {
+            personBindingSource.RemoveCurrent();
+            this.tableAdapterManager1.UpdateAll(this.database1DataSet);
+        }
+
+        private void personBindingSource_CurrentChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void fillByToolStripButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.personTableAdapter.FillBy(this.database1DataSet.Person);
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }
